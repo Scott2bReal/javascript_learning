@@ -82,4 +82,3 @@ function extractRegion(string) {
   let code = string.split('.');
   return code[0].split('_')[1]; 
 }
-
