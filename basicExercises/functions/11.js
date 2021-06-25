@@ -48,7 +48,8 @@ function localGreet(locale) {
 function greet(code) { 
   switch (code) { 
     case 'en': 
-      console.log('Hi!'); break;
+      console.log('Hi!'); 
+      break;
     case 'fr': 
       console.log('Salut!'); 
       break; 
