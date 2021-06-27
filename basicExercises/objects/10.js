@@ -11,12 +11,77 @@
 
 let obj = {
   number: 1,
-    string: 'abc',
-      array: [1, 2, 3],
-      };
+  string: 'abc',
+  array: [1, 2, 3],
+};
 
-/**
- * If we make a shallow copy of obj, we'll create a new object that has the same 3 properties as obj:
+/** 
+ * If we make a shallow copy of obj, we'll create a new object that has the
+ * same 3 properties as obj:
  */
 
+let objCopy = clone(obj);
+console.log(objCopy); // { number: 1, string: 'abc', array: [ 1, 2, 3 ] }
 
+/** 
+ * Note that all 3 properties have the same value. However, what happens if we
+ * modify these values in one of the two objects and then inspect both objects?
+ */
+
+objCopy.number = 2;
+objCopy.string = 'xyz';
+objCopy.array.push(4);
+console.log(obj);     // { number: 1, string: 'abc', array: [ 1, 2, 3, 4 ] }
+console.log(objCopy); // { number: 2, string: 'xyz', array: [ 1, 2, 3, 4 ] }
+
+/** 
+ * As you might expect, the values for the number and string keys changed in
+ * objCopy, but not in obj. However, when we mutated the value of
+ * objCopy.array, it also mutated that value of obj.array. That's because a
+ * shallow copy only copies pointers for nested objects; since arrays are
+ * objects, the shallow copy just copied the pointer to the original array to
+ * objCopy. If you're wondering why this happens, you might want to review
+ * Variables as Pointers section in the Introduction to JavaScript book.
+ */
+
+function clone(obj) {
+  let objEntries = Object.entries(obj);
+  let objClone = Object.fromEntries(objEntries);
+  return objClone;
+}
+
+let person = {
+  title: 'Duke',
+  name: {
+    value: 'Nukem',
+    isStageName: true
+  },
+  age: 33
+};
+
+let clonedPerson = clone(person);
+person.age = 34;
+
+console.log(person.age);       // 34
+console.log(clonedPerson.age); // 33
+
+person.name.isStageName = false;
+console.log(person.name.isStageName);       // false
+console.log(clonedPerson.name.isStageName); // false
+
+/**
+ * My solution appears to work, but the book solution is more elegant. 
+ * The clone function in the book looks like this: 
+ *
+ * function clone (obj) {
+ *   let objClone = Object.assign({}, obj);
+ * }
+ *
+ * They use Object.assign(), which, according to MDN, copies all enumerable own
+ * properties from one or more source objects to a target object. It returns the
+ * modified target object.
+ *
+ * I looked through the built in Object methods on MDN but I must have glossed
+ * over Object.assign(). Maybe I wasn't in the groove yet as it was the first
+ * listed method.
+ */
